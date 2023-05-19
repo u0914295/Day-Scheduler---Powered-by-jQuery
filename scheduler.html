@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work Day Scheduler</title>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #f8f9fa;
+            padding: 1rem 0;
+            margin-bottom: 1rem;
+        }
+
+        header h1 {
+            margin-bottom: 0.5rem;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: -15px;
+            margin-left: -15px;
+        }
+
+        .col {
+            flex-basis: 0;
+            flex-grow: 1;
+            max-width: 100%;
+            padding-right: 15px;
+            padding-left: 15px;
+            box-sizing: border-box;
+        }
+
+        .col-1 {
+            flex: 0 0 8.333333%;
+            max-width: 8.333333%;
+        }
+
+        .col-9 {
+            flex: 0 0 75%;
+            max-width: 75%;
+        }
+
+        textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.5rem;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+            margin-bottom: 1rem;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .past {
+            background-color: gray;
+        }
+
+        .present {
+            background-color: red;
+        }
+
+        .future {
+            background-color: green;
+        }
+
+        @media (max-width: 576px) {
+            .col, .col-1, .col-9 {
+                flex-basis: 0;
+                flex-grow: 1;
+                max-width: 100%;
+            }
+            .col-1 {
+                flex: 0 0 16.666667%;
+                max-width: 16.666667%;
+            }
+            .col-9 {
+                flex: 0 0 66.666667%;
+                max-width: 66.666667%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="container text-center">
+        <h1>Work Day Scheduler</h1>
+        <p>A simple calendar app for scheduling your work day</p>
+        <p id="currentDate"></p>
+    </header>
+    <section id="timeBlocks" class="container"></section>
+
+    <script>
+        $(document).ready(function () {
+            const currentDate = dayjs().format('MMMM D, YYYY');
+            $('#currentDate').text(currentDate);
+
+            const allHours = Array.from({length: 24}, (_, i) => i);
+
+            allHours.forEach(hour => {
+                const displayHour = hour % 12 === 0 ? 12 : hour % 12;
+                const amPm = hour < 12 ? 'AM' : 'PM';
+                const row = $('<div>').addClass('row');
+                const hourCol = $('<div>').addClass('col col-1').text(`${displayHour} ${amPm}`);
+                const eventCol = $('<textarea>').addClass('col col-9').attr('id', `event-${hour}`);
+                const saveBtn = $('<button>').addClass('col col-2').text('Save').attr('data-hour', hour);
+
+                row.append(hourCol, eventCol, saveBtn);
+
+                const currentHour = dayjs().hour();
+                if (hour < currentHour) {
+                    eventCol.addClass('past');
+                } else if (hour === currentHour) {
+                    eventCol.addClass('present');
+                } else {
+                    eventCol.addClass('future');
+                }
+
+                $('#timeBlocks').append(row);
+            });
+
+            function loadEvents() {
+                allHours.forEach(hour => {
+                    const eventText = localStorage.getItem(`event-${hour}`);
+                    if (eventText) {
+                        $(`#event-${hour}`).val(eventText);
+                    }
+                });
+            }
+
+            loadEvents();
+
+            $('button').on('click', function () {
+                const hour = $(this).data('hour');
+                const eventText = $(`#event-${hour}`).val();
+                localStorage.setItem(`event-${hour}`, eventText);
+                alert('Event saved successfully!');
+            });
+        });
+    </script>
+</body>
+</html>
