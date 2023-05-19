@@ -1,7 +1,7 @@
 # Day Scheduler - Powered by jQuery
 
 ## Description
-This project showcases the culmination of the HTML and CSS knowledge I've learned with the use of jQuery to power the app instead of JavaScript. Clicking on one of the hour blocks will let you type in information about an event that is planned to occur during that allocated time. You can then save the information for that time slot
+This project showcases the culmination of the HTML and CSS knowledge I've learned with the use of jQuery to power the app instead of JavaScript. Clicking on one of the hour blocks will let you type in information about an event that is planned to occur during that allocated time. You can then save the information for that time slot by pressing the blu 
 
 ## Visuals
 The following screenshot shows a preview of the website's functionality. Clicking on one of the three section names within the Navigation Bar will auto-scroll you to that specific section of the portfolio.
